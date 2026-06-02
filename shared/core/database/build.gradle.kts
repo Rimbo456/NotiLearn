@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidMultiplatformLibrary)
     alias(libs.plugins.androidLint)
+    alias(libs.plugins.ksp)
 }
 
 kotlin {
@@ -63,6 +64,7 @@ kotlin {
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.room.compiler)
             implementation(libs.androidx.room.paging)
+            implementation(project(":shared:core:model"))
         }
 
         commonTest.dependencies {
