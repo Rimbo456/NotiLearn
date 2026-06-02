@@ -60,6 +60,9 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kotlin.stdlib)
             // Add KMP dependencies here
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.room.compiler)
+            implementation(libs.androidx.room.paging)
         }
 
         commonTest.dependencies {
