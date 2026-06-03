@@ -13,4 +13,7 @@ interface VocabularyDao {
 
     @Query("SELECT * FROM vocabulary WHERE nextReviewTime <= :currentTime AND status = 'LEARNING' LIMIT 1")
     suspend fun getNextReviewVocabulary(currentTime: Long): VocabularyEntity?
+
+    @Query("SELECT * FROM vocabulary WHERE id = :id")
+    suspend fun getVocabularyById(id: String): VocabularyEntity?
 }

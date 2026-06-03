@@ -62,7 +62,6 @@ kotlin {
             implementation(libs.kotlin.stdlib)
             // Add KMP dependencies here
             implementation(libs.androidx.room.runtime)
-            implementation(libs.androidx.room.compiler)
             implementation(libs.androidx.room.paging)
             implementation(project(":shared:core:model"))
         }
@@ -81,6 +80,9 @@ kotlin {
             implementation(libs.androidx.runner)
             implementation(libs.androidx.core)
             implementation(libs.androidx.testExt.junit)
+            implementation(libs.kotlin.test)
+            implementation(libs.androidx.sqlite.bundled)
+            implementation(libs.kotlinx.coroutines.test)
         }
 
         iosMain.dependencies {
@@ -91,5 +93,15 @@ kotlin {
             // KMP dependencies declared in commonMain.
         }
     }
+    configurations.all {
+        resolutionStrategy {
+            force("org.jetbrains:annotations:23.0.0")
+            exclude(group = "com.intellij", module = "annotations")
+        }
+    }
+}
 
+dependencies {
+    add("ksp", libs.androidx.room.compiler)
+    add("kspAndroidDeviceTest", libs.androidx.room.compiler)
 }
