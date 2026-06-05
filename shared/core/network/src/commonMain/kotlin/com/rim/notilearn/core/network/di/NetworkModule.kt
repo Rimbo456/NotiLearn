@@ -1,5 +1,6 @@
 package com.rim.notilearn.core.network.di
 
+import com.rim.notilearn.core.network.api.VocabularyApi
 import com.rim.notilearn.core.network.client.HttpClientFactory
 import com.rim.notilearn.core.network.client.KtorHttpClientFactory
 import io.ktor.client.HttpClient
@@ -19,5 +20,7 @@ object NetworkModule {
             val engine = get<HttpClientEngine>()
             factory.create(engine)
         }
+
+        single { VocabularyApi(get()) }
     }
 }

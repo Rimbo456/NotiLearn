@@ -1,25 +1,43 @@
 package com.rim.notilearn.core.network.api
 
+import com.rim.notilearn.core.network.BuildKonfig
+import com.rim.notilearn.core.network.response.GeminiResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.request.get
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
-import kotlin.getValue
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.request.url
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import io.ktor.http.path
 
-//interface VocabularyApi {
-//    suspend fun getVocabulary(id: Int): VocabularyDto
-//    suspend fun searchVocabulary(keyword: String): List<VocabularyDto>
-//}
-//
-//class KtorVocabularyApi : VocabularyApi, KoinComponent {
-//    private val httpClient: HttpClient by inject()
-//
-//    override suspend fun getVocabulary(id: Int): VocabularyDto {
-//        return httpClient.get("https://api.example.com/vocabulary/$id").body()
-//    }
-//
-//    override suspend fun searchVocabulary(keyword: String): List<VocabularyDto> {
-//        return httpClient.get("https://api.example.com/vocabulary/search?q=$keyword").body()
-//    }
-//}
+class VocabularyApi(
+    private val httpClient: HttpClient
+) {
+    suspend fun generateVocabularyContent(rawPrompt: String): String {
+        val requestBody = mapOf(
+            "content" to listOf(
+                mapOf(
+                    "parts" to listOf(
+                        mapOf("text" to rawPrompt)
+                    )
+                )
+            ),
+            "generationConfig" to mapOf(
+                "responseMimeType" to "application/json"
+            )
+        )
+
+        val response: GeminiResponse = httpClient.post {
+            url("https://generativelanguage.googleapis.com")
+            url.path("v1beta", "models", "gemini-3.5-flash:generateContent")
+            url.parameters.append("key", BuildKonfig.GEMINI_API_KEY)
+            contentType(ContentType.Application.Json)
+            setBody(requestBody)
+        }.body()
+
+        val text = response.candidates.firstOrNull()?.content?.parts?.firstOrNull()?.text
+            ?: ""
+        return text
+    }
+}
